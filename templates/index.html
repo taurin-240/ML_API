@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="py-5 mx-5">Обработка фото</h1>
+    <div class="d-flex gap-5 align-items-start">
+        <form action="/inference-template" enctype="multipart/form-data" class="px-5 py-4 border" name="form" method="post"
+              style="width: 500px" >
+            <label class="h4 mb-3" for="fileInput">Выберите файлы</label>
+            <input id="fileInput" name="files" accept="image/*,application/pdf" class="form-control mb-3" type="file" multiple>
+            <input class="btn btn-primary" type="submit">
+        </form>
+        <p class="h4 mx-5 mt-3" style="width: 400px">
+            </p>
+    </div>
+    {% if error %}
+    <div class="mt-4 alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if annotations %}
+    <div class="p-2 mt-5 d-flex gap-5 flex-wrap">
+        <a class="h4 btn btn-primary" href="{{ annotations_file }}" download>Скачать json файл с аннотацией</a>
+        {% for annotation in annotations %}
+        <div class="container d-flex p-3 align-items-start" style="background-color: #eee">
+            <img class="ml-5" style="width: 55vw; min-width: 330px;" src="{{ annotation.link_to_processed_image }}" alt="">
+            <div style="padding-right: 200px; margin-top: 20px; margin-left: 10px;" class="card">
+                <code style="white-space: pre-wrap" class="px-5 py-3 card-text">[{% for box in annotation.bboxes %}
+    {
+        "box_class": "{{ box.box_class}}",
+        "conf": {{ box.conf }},
+        "left_top": [
+            {{ box.left_top[0] }},
+            {{ box.left_top[1] }}
+        ],
+        "right_bottom": [
+            {{ box.right_bottom[0] }},
+            {{ box.right_bottom[1] }}
+        ]
+    },{% endfor %}
+]</code>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
