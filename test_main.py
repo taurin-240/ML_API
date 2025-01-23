@@ -1,5 +1,5 @@
 import unittest
-from main import app  # Импортируйте ваше Flask приложение
+from main import app 
 
 class TestAPI(unittest.TestCase):
 
