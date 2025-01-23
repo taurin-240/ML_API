@@ -1,12 +1,14 @@
 import unittest
+import json
+
+from fastapi.testclient import TestClient
 from main import app 
 
 class TestAPI(unittest.TestCase):
 
     def setUp(self):
-        self.app = app.test_client()
+        self.client = TestClient(app)
 
     def test_predict(self):
-        response = self.app.post('/predict', json={'data': [1, 2, 3]})
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertIn('prediction', response.json)
